@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://ljpiv8wafat1" path="res://scripts/tree.gd" id="1_0fbet"]
 [ext_resource type="Resource" uid="uid://bhc20e3uox8ix" path="res://data/bulletweapon_assets.gdt" id="2_62e2m"]
 
-[node name="HBoxContainer" type="HBoxContainer" unique_id=1979682165 node_paths=PackedStringArray("browser", "viewer")]
+[node name="HBoxContainer" type="HSplitContainer" unique_id=946180420 node_paths=PackedStringArray("browser", "viewer")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -20,6 +20,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 allow_search = false
 hide_root = true
+select_mode = 2
 scroll_horizontal_enabled = false
 
 [node name="Viewer" type="Tree" parent="." unique_id=541642228]
@@ -27,8 +28,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 12
-columns = 2
-hide_root = true
+columns = 4
 scroll_horizontal_enabled = false
 
-[connection signal="item_selected" from="Browser" to="." method="_on_browser_item_selected"]
+[connection signal="multi_selected" from="Browser" to="." method="_on_browser_multi_selected"]

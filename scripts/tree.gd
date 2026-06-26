@@ -5,6 +5,11 @@ extends Control
 @export var browser: Tree
 @export var viewer: Tree
 
+var _viewer_header: TreeItem
+
+var _selected: Dictionary[StringName, TreeItem]
+var _viewer_tree: Dictionary[StringName, TreeItem]
+
 
 func _ready() -> void:
 	var root: TreeItem = browser.create_item()
@@ -41,33 +46,56 @@ func _ready() -> void:
 		category.set_text(0, weapon_name)
 
 
-func _on_browser_item_selected() -> void:
-	viewer.clear()
+func _on_browser_item_selected(weapon_name: StringName, column: int) -> void:
+	_viewer_header.set_text(column, weapon_name)
 
-	var weapon_name: String = browser.get_selected().get_text(0)
 	var weapon_data: GDF = gdt.entries.get(weapon_name)
 
 	for key: String in weapon_data.properties.keys():
 		var value: String = weapon_data.properties.get(key)
 
-		var item: TreeItem = viewer.create_item()
-		item.set_text(0, key)
-		item.set_selectable(0, false)
+		var item: TreeItem = _viewer_tree.get(key)
+		if item == null:
+			item = viewer.create_item()
+			_viewer_tree.set(key, item)
 
-		#item.set_editable(1, true)
-		item.set_selectable(1, false)
+			item.set_text(0, key)
+			item.set_selectable(0, false)
+
+		#item.set_editable(column, true)
+		item.set_selectable(column, false)
 
 		if value.is_valid_int():
 			var num: int = value.to_int()
 
 			# Hasty boolean check.
 			if num == 0 or num == 1:
-				item.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
-				item.set_checked(1, num == 1)
+				item.set_cell_mode(column, TreeItem.CELL_MODE_CHECK)
+				item.set_checked(column, num == 1)
 			# Definitely an integer.
 			else:
-				item.set_text(1, value)
+				item.set_text(column, value)
 		elif value.is_valid_float():
-			item.set_text(1, value)
+			item.set_text(column, value)
 		else:
-			item.set_text(1, value)
+			item.set_text(column, value)
+
+
+func _on_browser_multi_selected(item: TreeItem, _column: int, selected: bool) -> void:
+	var weapon_name: StringName = item.get_text(0)
+
+	if selected:
+		_selected.set(weapon_name, item)
+	else:
+		_selected.erase(weapon_name)
+	
+	# Rebuild.
+	viewer.clear()
+	_viewer_tree.clear()
+
+	_viewer_header = viewer.create_item()
+
+	for column: int in _selected.keys().size():
+		_on_browser_item_selected(_selected.keys().get(column), column + 1)
+
+	printt(weapon_name, selected)
