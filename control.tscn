@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://bq41rtqaegs0j"]
+
+[ext_resource type="Script" uid="uid://ljpiv8wafat1" path="res://scripts/tree.gd" id="1_0fbet"]
+[ext_resource type="Resource" uid="uid://dgei0g6k4nhlp" path="res://data/bulletweapon_assets.gdt" id="2_62e2m"]
+
+[node name="HBoxContainer" type="HBoxContainer" unique_id=1979682165 node_paths=PackedStringArray("browser", "viewer")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0fbet")
+gdt = ExtResource("2_62e2m")
+browser = NodePath("Browser")
+viewer = NodePath("Viewer")
+
+[node name="Browser" type="Tree" parent="." unique_id=877068887]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+hide_root = true
+
+[node name="Viewer" type="Tree" parent="." unique_id=541642228]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+hide_root = true
+
+[connection signal="item_selected" from="Browser" to="." method="_on_browser_item_selected"]

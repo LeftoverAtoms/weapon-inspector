@@ -1,0 +1,15 @@
+[remap]
+
+importer="righteous.gdt"
+type="GDT"
+uid="uid://dgei0g6k4nhlp"
+path="res://.godot/imported/bulletweapon_assets.gdt-06a8395add4dcd3c8ea387de41239fdc.tres"
+
+[deps]
+
+source_file="res://data/bulletweapon_assets.gdt"
+dest_files=["res://.godot/imported/bulletweapon_assets.gdt-06a8395add4dcd3c8ea387de41239fdc.tres"]
+
+[params]
+
+my_option=false
