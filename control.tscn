@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bq41rtqaegs0j"]
 
 [ext_resource type="Script" uid="uid://ljpiv8wafat1" path="res://scripts/tree.gd" id="1_0fbet"]
-[ext_resource type="Resource" uid="uid://dgei0g6k4nhlp" path="res://data/bulletweapon_assets.gdt" id="2_62e2m"]
+[ext_resource type="Resource" uid="uid://bhc20e3uox8ix" path="res://data/bulletweapon_assets.gdt" id="2_62e2m"]
 
 [node name="HBoxContainer" type="HBoxContainer" unique_id=1979682165 node_paths=PackedStringArray("browser", "viewer")]
 anchors_preset = 15
