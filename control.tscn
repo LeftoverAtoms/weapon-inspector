@@ -18,12 +18,17 @@ viewer = NodePath("Viewer")
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+allow_search = false
 hide_root = true
+scroll_horizontal_enabled = false
 
 [node name="Viewer" type="Tree" parent="." unique_id=541642228]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 12
+columns = 2
 hide_root = true
+scroll_horizontal_enabled = false
 
 [connection signal="item_selected" from="Browser" to="." method="_on_browser_item_selected"]

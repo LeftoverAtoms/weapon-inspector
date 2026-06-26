@@ -36,44 +36,42 @@ func _parse(file: FileAccess) -> GDT:
 	var depth: int = 0
 	var is_type: bool = false
 
-	var entry: String = ""
-	var data: Dictionary = {}
-	var key: String = ""
-	var key_set: bool = false
+	var entry: StringName = &""
+	var gdf: GDF = null
+	var key: StringName = &""
+	var has_key: bool = false
 
 	while not file.eof_reached():
-		var token: String = _next_token(file)
+		var token: StringName = _next_token(file)
 
 		match token:
-			'{':
+			&'{':
 				depth += 1
 				continue
-			'}':
+			&'}':
 				depth -= 1
 				continue
-			'(':
+			&'(':
 				is_type = true
 				continue
-			')':
+			&')':
 				is_type = false
 				continue
 
 		if is_type:
-			data.set("type", token)
+			gdf.properties.set(&"type", token)
 		elif depth == 1:
 			entry = token
-			data = {}
-			key = ""
-			key_set = false
-			gdt.entries.set(entry, data)
+			gdf = GDF.new()
+			has_key = false
+			gdt.entries.set(entry, gdf)
 		elif depth == 2:
-			if key_set:
-				data.set(key, token)
-				key = ""
-				key_set = false
+			if has_key:
+				gdf.properties.set(key, token)
+				has_key = false
 			else:
 				key = token
-				key_set = true
+				has_key = true
 
 	return gdt
 
@@ -87,7 +85,7 @@ func _next_token(file: FileAccess) -> String:
 
 		# Execute until string is built.
 		# Exclude quote characters too.
-		if c == '"':
+		if c == &'"':
 			is_string = not is_string
 
 			if not is_string:
@@ -101,7 +99,7 @@ func _next_token(file: FileAccess) -> String:
 		# Expected to be a single character at this point!
 		if token.is_empty():
 			# Exclude non-token characters!
-			if c not in ['{', '}', '(', ')']:
+			if c not in [&'{', &'}', &'(', &')']:
 				continue
 
 			token = c
