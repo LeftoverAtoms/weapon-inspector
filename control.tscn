@@ -31,4 +31,4 @@ theme_override_font_sizes/font_size = 12
 columns = 4
 scroll_horizontal_enabled = false
 
-[connection signal="multi_selected" from="Browser" to="." method="_on_browser_multi_selected"]
+[connection signal="multi_selected" from="Browser" to="." method="_on_browser_multi_selection"]

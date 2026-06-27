@@ -1,5 +1,7 @@
 extends Control
 
+const PROPERTY_OFFSET: int = 1
+
 @export var gdt: GDT
 
 @export var browser: Tree
@@ -8,7 +10,7 @@ extends Control
 var _viewer_header: TreeItem
 
 var _selection: Dictionary[StringName, TreeItem]
-var _viewer_tree: Dictionary[StringName, TreeItem]
+var _properties: Dictionary[StringName, TreeItem]
 
 
 func _ready() -> void:
@@ -51,13 +53,13 @@ func _on_browser_item_selection(weapon_name: StringName, column: int) -> void:
 
 	var weapon_data: GDF = gdt.entries.get(weapon_name)
 
-	for key: String in weapon_data.properties.keys():
-		var value: String = weapon_data.properties.get(key)
+	for key: StringName in weapon_data.properties.keys():
+		var value: StringName = weapon_data.properties.get(key)
 
-		var item: TreeItem = _viewer_tree.get(key)
+		var item: TreeItem = _properties.get(key)
 		if item == null:
 			item = viewer.create_item()
-			_viewer_tree.set(key, item)
+			_properties.set(key, item)
 
 			item.set_text(0, key)
 			item.set_selectable(0, false)
@@ -82,33 +84,49 @@ func _on_browser_item_selection(weapon_name: StringName, column: int) -> void:
 
 
 func _on_browser_multi_selection(item: TreeItem, _column: int, selected: bool) -> void:
-	var weapon_name: StringName = item.get_text(0)
+	var key: StringName = item.get_text(0)
+	var is_dirty: bool = false
 
 	if selected:
-		_selection.set(weapon_name, item)
+		is_dirty = _selection.set(key, item)
 	else:
-		_selection.erase(weapon_name)
-	
-	# Rebuild.
-	viewer.clear()
-	_viewer_tree.clear()
+		is_dirty = _selection.erase(key)
 
-	_viewer_header = viewer.create_item()
+	if not is_dirty:
+		return
 
-	for column: int in _selection.keys().size():
-		_on_browser_item_selection(_selection.keys().get(column), column + 1)
+	viewer.columns = PROPERTY_OFFSET + _selection.size()
 
-	for property_name: StringName in _viewer_tree.keys():
-		var property_item: TreeItem = _viewer_tree.get(property_name)
+	_rebuild()
 
-		var original_value: String = property_item.get_text(1)
+
+func _rebuild() -> void:
+	if _viewer_header == null:
+		_viewer_header = viewer.create_item()
+
+	if viewer.columns < 2:
+		return
+
+	# Set properties for each selected asset.
+	for index: int in _selection.keys().size():
+		var key: StringName = _selection.keys().get(index)
+		_on_browser_item_selection(key, PROPERTY_OFFSET + index)
+
+	# Iterate through each property.
+	for key: StringName in _properties.keys():
+		var value: TreeItem = _properties.get(key)
+
+		var first_value: String = value.get_text(PROPERTY_OFFSET)
 		var is_different: bool = false
 
-		for column: int in range(2, _selection.size() + 1):
-			if property_item.get_text(column) != original_value:
+		for column: int in range(PROPERTY_OFFSET, PROPERTY_OFFSET + _selection.size()):
+			if value.get_text(column) != first_value:
 				is_different = true
 				break
 
 		if is_different:
 			for column: int in viewer.columns:
-				property_item.set_custom_color(column, Color.RED)
+				value.set_custom_color(column, Color.RED)
+		else:
+			for column: int in viewer.columns:
+				value.set_custom_color(column, Color.WHITE)
