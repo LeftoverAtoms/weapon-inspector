@@ -98,4 +98,17 @@ func _on_browser_multi_selected(item: TreeItem, _column: int, selected: bool) ->
 	for column: int in _selected.keys().size():
 		_on_browser_item_selected(_selected.keys().get(column), column + 1)
 
-	printt(weapon_name, selected)
+	for property_name: StringName in _viewer_tree.keys():
+		var property_item: TreeItem = _viewer_tree.get(property_name)
+
+		var original_value: String = property_item.get_text(1)
+		var is_different: bool = false
+
+		for column: int in range(2, _selected.size() + 1):
+			if property_item.get_text(column) != original_value:
+				is_different = true
+				break
+
+		if is_different:
+			for column: int in viewer.columns:
+				property_item.set_custom_color(column, Color.RED)
