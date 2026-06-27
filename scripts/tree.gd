@@ -69,12 +69,12 @@ func _on_browser_item_selected(weapon_name: StringName, column: int) -> void:
 			var num: int = value.to_int()
 
 			# Hasty boolean check.
-			if num == 0 or num == 1:
-				item.set_cell_mode(column, TreeItem.CELL_MODE_CHECK)
-				item.set_checked(column, num == 1)
+			#if num == 0 or num == 1:
+			#	item.set_cell_mode(column, TreeItem.CELL_MODE_CHECK)
+			#	item.set_checked(column, num == 1)
 			# Definitely an integer.
-			else:
-				item.set_text(column, value)
+			#else:
+			item.set_text(column, value)
 		elif value.is_valid_float():
 			item.set_text(column, value)
 		else:
