@@ -7,7 +7,7 @@ extends Control
 
 var _viewer_header: TreeItem
 
-var _selected: Dictionary[StringName, TreeItem]
+var _selection: Dictionary[StringName, TreeItem]
 var _viewer_tree: Dictionary[StringName, TreeItem]
 
 
@@ -46,7 +46,7 @@ func _ready() -> void:
 		category.set_text(0, weapon_name)
 
 
-func _on_browser_item_selected(weapon_name: StringName, column: int) -> void:
+func _on_browser_item_selection(weapon_name: StringName, column: int) -> void:
 	_viewer_header.set_text(column, weapon_name)
 
 	var weapon_data: GDF = gdt.entries.get(weapon_name)
@@ -81,13 +81,13 @@ func _on_browser_item_selected(weapon_name: StringName, column: int) -> void:
 			item.set_text(column, value)
 
 
-func _on_browser_multi_selected(item: TreeItem, _column: int, selected: bool) -> void:
+func _on_browser_multi_selection(item: TreeItem, _column: int, selected: bool) -> void:
 	var weapon_name: StringName = item.get_text(0)
 
 	if selected:
-		_selected.set(weapon_name, item)
+		_selection.set(weapon_name, item)
 	else:
-		_selected.erase(weapon_name)
+		_selection.erase(weapon_name)
 	
 	# Rebuild.
 	viewer.clear()
@@ -95,8 +95,8 @@ func _on_browser_multi_selected(item: TreeItem, _column: int, selected: bool) ->
 
 	_viewer_header = viewer.create_item()
 
-	for column: int in _selected.keys().size():
-		_on_browser_item_selected(_selected.keys().get(column), column + 1)
+	for column: int in _selection.keys().size():
+		_on_browser_item_selection(_selection.keys().get(column), column + 1)
 
 	for property_name: StringName in _viewer_tree.keys():
 		var property_item: TreeItem = _viewer_tree.get(property_name)
@@ -104,7 +104,7 @@ func _on_browser_multi_selected(item: TreeItem, _column: int, selected: bool) ->
 		var original_value: String = property_item.get_text(1)
 		var is_different: bool = false
 
-		for column: int in range(2, _selected.size() + 1):
+		for column: int in range(2, _selection.size() + 1):
 			if property_item.get_text(column) != original_value:
 				is_different = true
 				break
